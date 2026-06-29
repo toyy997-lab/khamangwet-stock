@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ขมังเวท">
+<title>ขมังเวท — ระบบสต็อก</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+:root{
+  --bg:#0f0f13;--bg2:#18181f;--bg3:#22222c;
+  --border:#2e2e3a;--border2:#3e3e4e;
+  --text:#e8e8f0;--text2:#9090a8;--text3:#5a5a70;
+  --orange:#e8822a;--orange2:#c46818;
+  --green:#4caf7a;--green-dim:#0a2016;
+  --red:#e05252;--red-dim:#220a0a;
+  --yellow:#d4a843;--yellow-dim:#251d08;
+  --blue:#5b8fd4;--blue-dim:#0a1525;
+  --purple:#9b6fd4;--purple-dim:#1a0a2e;
+  --r:12px;--rs:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
+
+/* HEADER */
+.hdr{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between}
+.hdr h1{font-size:16px;font-weight:600}
+.hdr .sub{font-size:11px;color:var(--text3);margin-top:1px}
+.hdr-right{display:flex;gap:6px;align-items:center}
+.btn-sm{background:none;border:1px solid var(--border2);color:var(--text2);padding:6px 10px;border-radius:var(--rs);font-family:'Sarabun',sans-serif;font-size:12px;cursor:pointer}
+.btn-sm:active{background:var(--bg3)}
+.btn-or{background:var(--orange);border-color:var(--orange);color:#fff}
+.btn-bl{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* TABS */
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:10px 12px;font-family:'Sarabun',sans-serif;font-size:13px;color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0}
+.tab-btn.active{color:var(--orange);border-bottom-color:var(--orange)}
+.page{display:none;padding:12px 16px}
+.page.active{display:block}
+
+/* STRIP */
+.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.strip-item{text-align:center}
+.strip-item .sv{font-size:19px;font-weight:700}
+.strip-item .sl{font-size:10px;color:var(--text3);margin-top:1px}
+.ok{color:var(--green)}.warn{color:var(--yellow)}.danger{color:var(--red)}
+
+/* SECTION HEADER */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sec-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+.sort-btns{display:flex;gap:4px}
+.sort-btn{background:none;border:1px solid var(--border2);color:var(--text3);font-family:'Sarabun',sans-serif;font-size:10px;padding:3px 8px;border-radius:20px;cursor:pointer}
+.sort-btn:hover{border-color:var(--orange);color:var(--orange)}
+
+/* MAIN ITEMS (ตัวหลัก) */
+.main-card{background:var(--bg2);border:1px solid var(--purple);border-left:3px solid var(--purple);border-radius:var(--r);margin-bottom:8px;overflow:hidden}
+.main-head{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border)}
+.main-title{font-size:13px;font-weight:600;color:var(--purple)}
+.main-row{display:grid;grid-template-columns:28px 1fr 65px 42px 28px;align-items:center;gap:5px;padding:7px 10px;border-bottom:1px solid var(--border)}
+.main-row:last-of-type{border-bottom:none}
+.main-emoji{font-size:18px;text-align:center}
+.main-name{font-size:12px;color:var(--text)}
+.main-stats{padding:8px 12px;background:var(--bg3);display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.mstat{text-align:center}
+.mstat-val{font-size:13px;font-weight:700;color:var(--text)}
+.mstat-lbl{font-size:10px;color:var(--text3);margin-top:1px}
+.mstat-val.profit{color:var(--green)}
+.mstat-val.loss{color:var(--red)}
+.mstat-val.warn{color:var(--yellow)}
+
+/* CREEP CARDS */
+.ccard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.ccard.s-ok{border-left:3px solid var(--green)}
+.ccard.s-low{border-left:3px solid var(--yellow)}
+.ccard.s-empty{border-left:3px solid var(--red)}
+.chead{display:flex;align-items:flex-start;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border)}
+.ctitle{font-size:14px;font-weight:600}
+.cuid{font-size:10px;color:var(--text3);font-family:monospace;margin-top:2px;display:flex;align-items:center;gap:4px}
+.copy-uid-btn{background:none;border:1px solid var(--border2);color:var(--text3);font-size:9px;padding:1px 5px;border-radius:3px;cursor:pointer;font-family:'Sarabun',sans-serif}
+.copy-uid-btn:active{background:var(--bg3)}
+.chead-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;margin-left:8px}
+.badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500}
+.b-ok{background:var(--green-dim);color:var(--green);border:1px solid var(--green)}
+.b-low{background:var(--yellow-dim);color:var(--yellow);border:1px solid var(--yellow)}
+.b-empty{background:var(--red-dim);color:var(--red);border:1px solid var(--red)}
+.rpill{font-size:11px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:2px 7px;color:var(--text2)}
+.rpill.empty{color:var(--red);border-color:var(--red)}
+.rpill.full{color:var(--green);border-color:var(--green)}
+.copy-name-btn{background:none;border:1px solid var(--border2);color:var(--text3);font-size:9px;padding:2px 6px;border-radius:3px;cursor:pointer;font-family:'Sarabun',sans-serif;white-space:nowrap}
+.copy-name-btn:active{background:var(--bg3)}
+
+/* ITEM ROW */
+.irow{display:grid;grid-template-columns:30px 1fr 65px 40px 26px;align-items:center;gap:5px;padding:7px 10px;border-bottom:1px solid var(--border)}
+.irow:last-of-type{border-bottom:none}
+.iimg{width:28px;height:28px;border-radius:5px;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;overflow:hidden;position:relative;flex-shrink:0}
+.iimg img{width:100%;height:100%;object-fit:cover}
+.iimg input[type=file]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.iname{font-size:12px;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.iqty{width:65px;height:32px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);color:var(--text);font-family:'Sarabun',sans-serif;font-size:14px;font-weight:700;text-align:center}
+.iqty:focus{outline:none;border-color:var(--orange)}
+.iqty.low{color:var(--yellow);border-color:var(--yellow)}
+.iqty.crisis{color:var(--red);border-color:var(--red)}
+.sinp{width:40px;height:28px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rs);color:var(--text);font-family:'Sarabun',sans-serif;font-size:12px;font-weight:700;text-align:center}
+.sinp:focus{outline:none;border-color:var(--orange)}
+.sbtn{background:var(--orange);border:none;border-radius:var(--rs);color:#fff;font-size:13px;width:24px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sbtn:active{background:var(--orange2)}
+
+/* CARD FOOTER */
+.cfoot{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border)}
+.cfoot-col{padding:7px 12px}
+.cfoot-col:first-child{border-right:1px solid var(--border)}
+.cfoot-lbl{font-size:10px;color:var(--text3);margin-bottom:2px}
+.cfoot-val{font-size:14px;font-weight:700}
+
+/* ALERT */
+.alert-box{border-radius:var(--r);border:1px solid;margin-bottom:10px;overflow:hidden}
+.alert-box .ah{padding:10px 14px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.alert-box .ab{padding:8px 14px;font-size:13px;color:var(--text2);line-height:1.8}
+.alert-box.danger{border-color:var(--red);background:var(--red-dim)}.alert-box.danger .ah{color:var(--red)}
+.alert-box.warn{border-color:var(--yellow);background:var(--yellow-dim)}.alert-box.warn .ah{color:var(--yellow)}
+.alert-box.ok{border-color:var(--green);background:var(--green-dim)}.alert-box.ok .ah{color:var(--green)}
+
+/* CALC */
+.total-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.total-lbl{font-size:12px;color:var(--text2)}
+.total-amt{font-size:22px;font-weight:700;color:var(--orange)}
+.calc-hdr{display:grid;grid-template-columns:26px 1fr 48px 48px 52px 52px;gap:4px;padding:3px 10px;font-size:10px;color:var(--text3)}
+.calc-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:5px;overflow:hidden}
+.calc-row{display:grid;grid-template-columns:26px 1fr 48px 48px 52px 52px auto;align-items:center;gap:4px;padding:7px 8px}
+.cemoji{font-size:17px;text-align:center;cursor:pointer}
+.cname{background:none;border:none;border-bottom:1px dashed var(--border2);color:var(--text);font-family:'Sarabun',sans-serif;font-size:12px;width:100%;padding:1px 0}
+.cname:focus{outline:none;border-bottom-color:var(--orange)}
+.crate{width:48px;height:26px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);color:var(--text);font-family:'Sarabun',sans-serif;font-size:11px;text-align:center}
+.crate:focus{outline:none;border-color:var(--orange)}
+.cqty{width:52px;height:30px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);color:var(--text);font-family:'Sarabun',sans-serif;font-size:13px;font-weight:700;text-align:center}
+.cqty:focus{outline:none;border-color:var(--orange)}
+.csub{width:52px;text-align:right;font-size:12px;font-weight:700;color:var(--text3)}
+.csub.on{color:var(--green)}
+.del-btn{background:none;border:1px solid var(--border2);border-radius:4px;width:20px;height:20px;color:var(--red);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.add-item-btn{width:100%;background:none;border:1px dashed var(--border2);border-radius:var(--r);color:var(--text2);font-family:'Sarabun',sans-serif;font-size:13px;padding:9px;cursor:pointer;margin-top:4px}
+.copy-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.copy-btn{border:none;border-radius:var(--r);font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;padding:12px;cursor:pointer}
+.copy-btn.buy{background:var(--blue);color:#fff}
+.copy-btn.sell{background:var(--orange);color:#fff}
+
+/* BREAK-EVEN CALCULATOR */
+.calc-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.calc-section h3{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.be-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.be-field label{font-size:11px;color:var(--text3);margin-bottom:4px;display:block}
+.be-inp{width:100%;height:36px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);color:var(--text);font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;text-align:center}
+.be-inp:focus{outline:none;border-color:var(--orange)}
+.be-result{background:var(--bg3);border-radius:var(--rs);padding:10px 12px}
+.be-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:13px}
+.be-row:last-child{border-bottom:none;padding-top:8px;margin-top:4px}
+.be-row .label{color:var(--text2)}
+.be-row .val{font-weight:700;color:var(--text)}
+.be-row .val.ok{color:var(--green)}
+.be-row .val.warn{color:var(--yellow)}
+.be-row .val.danger{color:var(--red)}
+.be-row.total .label{font-weight:600;color:var(--text)}
+.calc-btn{width:100%;background:var(--orange);border:none;border-radius:var(--rs);color:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;padding:10px;cursor:pointer;margin-bottom:8px}
+
+/* SELL MODE */
+.sell-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden}
+.sell-head{padding:10px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.sell-item-row{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid var(--border)}
+.sell-item-row:last-of-type{border-bottom:none}
+.sell-name{font-size:13px;color:var(--text)}
+.sell-stock{font-size:12px;color:var(--text3)}
+.sell-price{font-size:13px;font-weight:700;color:var(--green)}
+
+/* LOG */
+.log-day{margin-bottom:12px}
+.log-day-hd{font-size:12px;font-weight:600;color:var(--text2);padding:5px 0;border-bottom:1px solid var(--border);margin-bottom:6px;display:flex;justify-content:space-between}
+.log-entry{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:7px 10px;margin-bottom:4px;display:flex;align-items:flex-start;gap:8px}
+.log-ts{font-size:11px;color:var(--text3);white-space:nowrap;min-width:36px}
+.log-msg{font-size:12px;color:var(--text);flex:1;line-height:1.5}
+.log-tag{display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;margin-top:2px}
+.log-tag.send{background:#2a1a08;color:var(--orange)}
+.log-tag.edit{background:var(--blue-dim);color:var(--blue)}
+.log-tag.round{background:var(--green-dim);color:var(--green)}
+.log-tag.buy{background:var(--purple-dim);color:var(--purple)}
+.log-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:0 2px;flex-shrink:0}
+.log-del:hover{color:var(--red)}
+.log-empty{font-size:13px;color:var(--text3);text-align:center;padding:20px}
+
+/* MANAGE */
+.mc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:10px}
+.mc h3{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.minp{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);color:var(--text);font-family:'Sarabun',sans-serif;font-size:13px;padding:6px 10px;width:100%}
+.minp:focus{outline:none;border-color:var(--orange)}
+.mrow{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;margin-bottom:5px}
+.add-c-btn{width:100%;background:none;border:1px dashed var(--border2);border-radius:var(--r);color:var(--text2);font-family:'Sarabun',sans-serif;font-size:13px;padding:9px;cursor:pointer;margin-top:4px}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.settings-row:last-child{border-bottom:none}
+.settings-label{font-size:13px;color:var(--text2)}
+.settings-inp{width:70px;height:30px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);color:var(--text);font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;text-align:center}
+.settings-inp:focus{outline:none;border-color:var(--orange)}
+
+/* MISC */
+.qb{width:24px;height:24px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);color:var(--text2);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qb:active{background:var(--border2)}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px}
+.sync-dot.syncing{background:var(--yellow);animation:pulse 1s infinite}
+.sync-dot.error{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px}
+.loading .spinner{width:40px;height:40px;border:3px solid var(--border2);border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite}
+.loading p{font-size:14px;color:var(--text2)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:flex-end}
+.overlay.show{display:flex}
+.modal{background:var(--bg2);border-top:1px solid var(--border);border-radius:var(--r) var(--r) 0 0;width:100%;padding:20px 16px 36px}
+.modal h2{font-size:16px;font-weight:600;margin-bottom:6px}
+.modal p{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6}
+.modal-btns{display:flex;gap:8px}
+.modal-btns button{flex:1;padding:12px;border-radius:var(--rs);font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none}
+.mbtn-cancel{background:var(--bg3);color:var(--text2)}
+.mbtn-confirm{background:var(--orange);color:#fff}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--bg2);border:1px solid var(--border2);border-left:3px solid var(--orange);color:var(--text);padding:10px 20px;border-radius:var(--r);font-size:13px;z-index:999;opacity:0;transition:all .25s;white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* SNAP PREVIEW */
+.snap-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;display:none;flex-direction:column;align-items:center;gap:0;padding:0;overflow-y:auto}
+.snap-overlay.show{display:flex}
+.snap-top-bar{position:sticky;top:0;width:100%;background:rgba(15,15,19,.95);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;z-index:10;border-bottom:1px solid var(--border)}
+.snap-body{padding:16px;width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.snap-actions{display:flex;gap:8px}
+</style>
+</head>
+<body>
+
+<div class="loading" id="loading"><div class="spinner"></div><p>กำลังเชื่อมต่อ Firebase...</p></div>
+
+<div class="hdr">
+  <div>
+    <h1>🔮 ขมังเวท <span class="sync-dot" id="syncDot"></span></h1>
+    <div class="sub" id="lastUpdate">กำลังโหลด...</div>
+  </div>
+  <div class="hdr-right">
+    <button class="btn-sm" onclick="showResetModal()">🔄 รีเซ็ต</button>
+    <button class="btn-sm btn-bl" onclick="showSnap()">📸 แคป</button>
+    <button class="btn-sm btn-or" onclick="copySum()">📋 สรุป</button>
+  </div>
+</div>
+
+<div class="strip" id="strip"></div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('stock',this)">📦 สต็อก</button>
+  <button class="tab-btn" onclick="showTab('sell',this)">⚡ ขายของ</button>
+  <button class="tab-btn" onclick="showTab('alert',this)">🔔 แจ้งเตือน</button>
+  <button class="tab-btn" onclick="showTab('calc',this)">🧮 คิดเงิน</button>
+  <button class="tab-btn" onclick="showTab('log',this)">📜 log</button>
+  <button class="tab-btn" onclick="showTab('manage',this)">⚙️ จัดการ</button>
+</div>
+
+<!-- STOCK -->
+<div id="p-stock" class="page active">
+  <div class="sec-hdr">
+    <div class="sec-lbl">⭐ ไอเทมตัวหลัก</div>
+  </div>
+  <div id="mainItems"></div>
+  <div class="sec-hdr" style="margin-top:8px">
+    <div class="sec-lbl">🟠 โบราณส้ม — ตัวเด็ก</div>
+    <div class="sort-btns">
+      <button class="sort-btn" onclick="sortCreeps('stock')">สต็อกน้อย↑</button>
+      <button class="sort-btn" onclick="sortCreeps('rounds')">รอบน้อย↑</button>
+      <button class="sort-btn" onclick="sortCreeps('default')">ค่าเริ่มต้น</button>
+    </div>
+  </div>
+  <div id="creepCards"></div>
+</div>
+
+<!-- SELL MODE -->
+<div id="p-sell" class="page">
+  <div style="font-size:13px;color:var(--text2);margin-bottom:12px">⚡ โหมดขายของ — เช็คสต็อก คิดเงิน ส่งของ หน้าเดียว</div>
+  <div id="sellSection"></div>
+</div>
+
+<!-- ALERT -->
+<div id="p-alert" class="page"><div id="alertSection"></div></div>
+
+<!-- CALC -->
+<div id="p-calc" class="page">
+  <div style="display:flex;gap:6px;margin-bottom:6px">
+    <div class="total-bar" style="flex:1;margin-bottom:0">
+      <div class="total-lbl">ยอดรวมขาย</div>
+      <div class="total-amt" id="gtSell">0 <span style="font-size:12px;color:var(--text2)">฿</span></div>
+    </div>
+    <div class="total-bar" style="flex:1;margin-bottom:0">
+      <div class="total-lbl">ยอดรวมซื้อ</div>
+      <div class="total-amt" style="color:var(--blue)" id="gtBuy">0 <span style="font-size:12px;color:var(--text2)">฿</span></div>
+    </div>
+  </div>
+  <button style="width:100%;background:var(--red-dim);border:1px solid var(--red);border-radius:var(--rs);color:var(--red);font-family:Sarabun,sans-serif;font-size:13px;font-weight:600;padding:8px;cursor:pointer;margin-bottom:8px" onclick="clearCalcQty()">🗑 เคลียร์ยอด (รับลูกค้าคนต่อไป)</button>
+  <div class="calc-hdr"><span></span><span></span><span style="text-align:center">ซื้อ</span><span style="text-align:center">ขาย</span><span style="text-align:center">จำนวน</span><span style="text-align:right">รวมขาย</span></div>
+  <div id="calcItems"></div>
+  <button class="add-item-btn" onclick="addCalcItem()">+ เพิ่มไอเทม</button>
+  <div class="copy-row">
+    <button class="copy-btn buy" onclick="copyOrder('buy')">📋 สรุปรับซื้อ</button>
+    <button class="copy-btn sell" onclick="copyOrder('sell')">📋 สรุปขาย</button>
+  </div>
+</div>
+
+<!-- LOG -->
+<div id="p-log" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="font-size:13px;color:var(--text2)">📜 ประวัติ 3 วัน</div>
+    <button class="btn-sm" onclick="clearLogs()">🗑 ล้างทั้งหมด</button>
+  </div>
+  <div id="logSection"></div>
+</div>
+
+<!-- MANAGE -->
+<div id="p-manage" class="page">
+  <div class="mc">
+    <h3>➕ เพิ่มตัวเด็กใหม่</h3>
+    <input class="minp" id="newCN" placeholder="ชื่อตัวเด็ก เช่น ครีปหมายเลข1" style="margin-bottom:6px">
+    <input class="minp" id="newUID" placeholder="UID ตัวเด็ก" style="margin-bottom:8px">
+    <button class="btn-sm btn-or" style="width:100%;padding:10px" onclick="addChild()">+ เพิ่มตัวเด็ก</button>
+  </div>
+  <div id="manageCards"></div>
+</div>
+
+<!-- SNAP OVERLAY -->
+<div class="snap-overlay" id="snapOverlay">
+  <div class="snap-top-bar">
+    <span style="color:#fff;font-size:14px;font-weight:600">📸 แคปสต็อก</span>
+    <button class="btn-sm" onclick="closeSnap()">✕ ปิด</button>
+  </div>
+  <div class="snap-body">
+    <div id="snapChecks" style="background:var(--bg2);border-radius:var(--r);padding:12px"></div>
+    <div class="snap-actions">
+      <button class="btn-sm btn-bl" style="flex:1" onclick="genSnap()">📸 สร้างรูป</button>
+    </div>
+    <div id="snapResult" style="display:none">
+      <canvas id="snapCanvas" style="width:100%;border-radius:var(--r)"></canvas>
+      <div class="snap-actions" style="margin-top:8px">
+        <button class="btn-sm btn-or" style="flex:1" onclick="downloadSnap()">💾 บันทึกรูป</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESET MODAL -->
+<div class="overlay" id="overlay" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h2>🔄 รีเซ็ตรอบส่ง</h2>
+    <p>จะรีเซ็ตรอบส่งทุกตัวกลับเป็น 10/10<br>สต็อกของจะไม่เปลี่ยนครับ</p>
+    <div class="modal-btns">
+      <button class="mbtn-cancel" onclick="closeModal()">ยกเลิก</button>
+      <button class="mbtn-confirm" onclick="resetRounds()">รีเซ็ตเลย</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import{getFirestore,doc,getDoc,setDoc,onSnapshot}from"https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const FC={apiKey:"AIzaSy81ZZ184fAUALM8KNeVoVJ7YZa4XU9zaDI",authDomain:"khamangwet-stock.firebaseapp.com",projectId:"khamangwet-stock",storageBucket:"khamangwet-stock.firebasestorage.app",messagingSenderId:"18047593108",appId:"1:18047593108:web:fec413656fb9bf704d2281"};
+const db=getFirestore(initializeApp(FC));
+const DR=doc(db,"stock","main"),DR2=doc(db,"stock","calc"),DR3=doc(db,"stock","mainItems");
+
+// DEFAULT DATA — เริ่มต้นว่างเปล่า ให้เพิ่มเองผ่านหน้าจัดการ
+const DEF={children:[],logs:[],lastUpdate:null,lastResetDate:new Date().toDateString(),idCounter:100,settings:{lowAlert:100,crisisAlert:50}};
+const DEF2={items:[]};
+const DEF3={items:[]};
+
+
+let S=JSON.parse(JSON.stringify(DEF));
+let SC=JSON.parse(JSON.stringify(DEF2));
+let SM=JSON.parse(JSON.stringify(DEF3));
+window._saving=false;
+let toastTm,calcTm,sortMode='default';
+
+Object.defineProperty(window,'saving',{
+  get(){return window._saving;},
+  set(v){window._saving=v;}
+});
+
+// FIREBASE
+async function loadFB(){
+  try{
+    setSync('syncing');
+    const[s1,s2,s3]=await Promise.all([getDoc(DR),getDoc(DR2),getDoc(DR3)]);
+    if(s1.exists())S=s1.data();else await setDoc(DR,DEF);
+    if(s2.exists())SC=s2.data();else await setDoc(DR2,DEF2);
+    if(s3.exists())SM=s3.data();else await setDoc(DR3,DEF3);
+    if(!S.settings)S.settings={lowAlert:100,crisisAlert:50};
+    checkReset();
+    document.getElementById('loading').style.display='none';
+    loadSettings();renderAll();setSync('ok');
+    onSnapshot(DR,sn=>{if(sn.exists()&&!saving){S=sn.data();if(!S.settings)S.settings={lowAlert:100,crisisAlert:50};renderAll();setSync('ok')}});
+    onSnapshot(DR2,sn=>{if(sn.exists()&&!saving){SC=sn.data();renderCalc()}});
+    onSnapshot(DR3,sn=>{if(sn.exists()&&!saving){SM=sn.data();renderMainItems()}});
+  }catch(e){
+    setSync('error');document.getElementById('loading').style.display='none';
+    toast('❌ เชื่อมต่อไม่ได้');renderAll();
+  }
+}
+
+async function save(){
+  try{saving=true;setSync('syncing');S.lastUpdate=new Date().toISOString();await setDoc(DR,S);setSync('ok');upd();}
+  catch(e){setSync('error');toast('❌ บันทึกไม่ได้');}
+  finally{setTimeout(()=>{saving=false;},2000);}
+}
+async function saveC(){try{await setDoc(DR2,SC);}catch(e){toast('❌ บันทึกไม่ได้');}}
+async function saveM(){try{await setDoc(DR3,SM);}catch(e){toast('❌ บันทึกไม่ได้');}}
+
+function setSync(s){const d=document.getElementById('syncDot');d.className='sync-dot'+(s==='syncing'?' syncing':s==='error'?' error':'');}
+function upd(){if(!S.lastUpdate)return;const d=new Date(S.lastUpdate);document.getElementById('lastUpdate').textContent='อัพเดท: '+d.toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}
+function checkReset(){const t=new Date().toDateString();if(S.lastResetDate!==t){S.children.forEach(c=>c.rounds=10);S.lastResetDate=t;}}
+function uid(){return 'x'+(++S.idCounter);}
+function fmt(n){if(!n&&n!==0)return'0';if(Number.isInteger(n))return n.toLocaleString('th-TH');return parseFloat(n.toFixed(2)).toLocaleString('th-TH');}
+function setsAvail(c){return c.items.length?Math.min(...c.items.map(i=>Math.floor(i.qty/50))):0;}
+function totalSets(){return S.children.reduce((a,c)=>a+setsAvail(c),0);}
+function alertCount(){
+  const low=S.settings?.lowAlert||100,crisis=S.settings?.crisisAlert||50;
+  return S.children.filter(c=>setsAvail(c)<=2).length+S.children.reduce((a,c)=>a+c.items.filter(i=>i.qty<low).length,0);
+}
+function loadSettings(){
+  if(S.settings){
+    document.getElementById('setLow').value=S.settings.lowAlert||100;
+    document.getElementById('setCrisis').value=S.settings.crisisAlert||50;
+  }
+}
+
+function addLog(msg,type='edit'){
+  if(!S.logs)S.logs=[];
+  const now=new Date();
+  S.logs.unshift({id:'l'+Date.now(),ts:now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}),msg,type,dk:now.toDateString()});
+  const cut=new Date();cut.setDate(cut.getDate()-3);
+  S.logs=S.logs.filter(l=>{try{return new Date(l.dk)>=cut;}catch{return true;}});
+  if(S.logs.length>300)S.logs=S.logs.slice(0,300);
+}
+
+// PIN VERIFY
+function verifyPin(cb){
+  const pin=prompt('🔐 ใส่รหัสยืนยันครับ:');
+  if(pin==='971999')cb();
+  else if(pin!==null)toast('❌ รหัสไม่ถูกต้องครับ');
+}
+
+// ACTIONS
+window.setQty=async(cid,iid,val)=>{
+  const c=S.children.find(x=>x.id===cid),item=c.items.find(x=>x.id===iid),prev=item.qty;
+  item.qty=Math.max(0,Math.round(val)||0);
+  addLog(c.name+' / '+item.name+': '+prev+' → '+item.qty,'edit');
+  await save();renderAll();toast('✅ '+item.name+' = '+item.qty+' ชิ้น');
+};
+
+window.sendItemQty=async(cid,iid,qty)=>{
+  const c=S.children.find(x=>x.id===cid),item=c.items.find(x=>x.id===iid);
+  if(c.rounds<1){toast('⚠️ รอบส่งหมดแล้ว');return;}
+  if(item.qty<qty){toast('⚠️ '+item.name+' มีแค่ '+item.qty+' ชิ้น');return;}
+  item.qty-=qty;c.rounds=Math.max(0,c.rounds-1);
+  addLog('✈ ส่ง '+item.name+' '+qty+' ชิ้น — '+c.name+' (เหลือ '+c.rounds+'/10)','send');
+  await save();renderAll();toast('✅ ส่ง '+item.name+' '+qty+' ชิ้น');
+};
+
+window.sendItem=async(cid,iid)=>{
+  const c=S.children.find(x=>x.id===cid),item=c.items.find(x=>x.id===iid);
+  const qty=parseInt(document.getElementById('sinp-'+cid+'-'+iid)?.value)||50;
+  if(c.rounds<1){toast('⚠️ รอบส่งหมดแล้ว');return;}
+  if(item.qty<qty){toast('⚠️ '+item.name+' มีแค่ '+item.qty+' ชิ้น');return;}
+  item.qty-=qty;c.rounds=Math.max(0,c.rounds-1);
+  addLog('✈ ส่ง '+item.name+' '+qty+' ชิ้น — '+c.name+' (เหลือ '+c.rounds+'/10)','send');
+  await save();renderAll();toast('✅ ส่ง '+item.name+' '+qty+' ชิ้น');
+};
+
+window.adjRounds=async(cid,d)=>{
+  const c=S.children.find(x=>x.id===cid);c.rounds=Math.min(10,Math.max(0,c.rounds+d));
+  addLog((d>0?'คืน':'หัก')+' 1 รอบ — '+c.name+' (เหลือ '+c.rounds+'/10)','round');
+  await save();renderAll();toast((d>0?'คืน':'หัก')+' 1 รอบ เหลือ '+c.rounds+'/10');
+};
+
+window.uploadImg=(cid,iid,input)=>{
+  const f=input.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{const i=new Image();i.onload=async()=>{const cv=document.createElement('canvas');cv.width=80;cv.height=80;cv.getContext('2d').drawImage(i,0,0,80,80);S.children.find(x=>x.id===cid).items.find(x=>x.id===iid).img=cv.toDataURL('image/jpeg',0.7);await save();renderAll();toast('✅ บันทึกรูปแล้ว!');};i.src=e.target.result;};r.readAsDataURL(f);
+};
+
+window.copyName=(name)=>{navigator.clipboard.writeText(name).then(()=>toast('📋 ก็อปชื่อ: '+name)).catch(()=>toast('❌ ก็อปไม่ได้'));};
+window.copyUID=(uid)=>{navigator.clipboard.writeText(uid).then(()=>toast('📋 ก็อป UID แล้ว!')).catch(()=>toast('❌ ก็อปไม่ได้'));};
+
+window.showResetModal=()=>document.getElementById('overlay').classList.add('show');
+window.closeModal=()=>document.getElementById('overlay').classList.remove('show');
+window.resetRounds=async()=>{
+  S.children.forEach(c=>c.rounds=10);addLog('รีเซ็ตรอบทุกตัว → 10/10','round');
+  await save();renderAll();closeModal();toast('🔄 รีเซ็ตรอบแล้วครับ!');
+};
+
+window.saveSettings=async()=>{
+  S.settings={lowAlert:parseInt(document.getElementById('setLow').value)||100,crisisAlert:parseInt(document.getElementById('setCrisis').value)||50};
+  await save();renderCards();renderAlert();toast('✅ บันทึกการตั้งค่าแล้ว');
+};
+
+window.sortCreeps=(mode)=>{
+  sortMode=mode;renderCards();
+};
+
+// MAIN ITEMS
+window.setMainQty=async(id,val)=>{
+  const item=SM.items.find(x=>x.id===id);if(!item)return;
+  const prev=item.qty;item.qty=Math.max(0,Math.round(val)||0);
+  addLog(item.name+' (ตัวหลัก): '+prev+' → '+item.qty,'edit');
+  await save();await saveM();renderMainItems();toast('✅ '+item.name+' = '+item.qty);
+};
+window.updMainField=async(id,field,val)=>{
+  const item=SM.items.find(x=>x.id===id);if(!item)return;
+  item[field]=isNaN(+val)?val:+val;
+  clearTimeout(calcTm);calcTm=setTimeout(()=>saveM(),800);
+  renderMainItems();
+};
+window.delMainItem=(id)=>{verifyPin(async()=>{SM.items=SM.items.filter(x=>x.id!==id);await saveM();renderMainItems();toast('🗑 ลบแล้วครับ');});};
+window.addMainItem=async()=>{
+  SM.items.push({id:'m'+Date.now(),emoji:'📦',name:'ไอเทมใหม่',qty:0,buyPrice:0,sellPrice:0,cutLoss:0,unit:'ชิ้น'});
+  await saveM();renderMainItems();
+};
+
+// MANAGE
+window.addChild=async()=>{
+  const n=document.getElementById('newCN').value.trim()||'ตัวเด็กใหม่';
+  const u=document.getElementById('newUID').value.trim()||'';
+  const maxOrder=Math.max(0,...S.children.map(c=>c.order||0));
+  S.children.push({id:uid(),name:n,uid:u,rounds:10,order:maxOrder+1,items:[{id:uid(),name:'ไอเทม A',img:'',qty:0},{id:uid(),name:'ไอเทม B',img:'',qty:0},{id:uid(),name:'ไอเทม C',img:'',qty:0}]});
+  document.getElementById('newCN').value='';document.getElementById('newUID').value='';
+  await save();renderAll();toast('✅ เพิ่ม '+n+' แล้วครับ!');
+};
+window.delChild=(cid)=>{
+  verifyPin(async()=>{
+    if(S.children.length<=1){toast('⚠️ ต้องมีอย่างน้อย 1 ตัว');return;}
+    S.children=S.children.filter(x=>x.id!==cid);await save();renderAll();toast('🗑 ลบแล้วครับ');
+  });
+};
+window.addItem=async(cid)=>{
+  S.children.find(x=>x.id===cid).items.push({id:uid(),name:'ไอเทมใหม่',img:'',qty:0});
+  await save();renderAll();
+};
+window.delItem=(cid,iid)=>{
+  verifyPin(async()=>{
+    const c=S.children.find(x=>x.id===cid);
+    if(c.items.length<=1){toast('⚠️ ต้องมีอย่างน้อย 1 ไอเทม');return;}
+    c.items=c.items.filter(x=>x.id!==iid);await save();renderAll();
+  });
+};
+window.updCN=async(cid,v)=>{S.children.find(x=>x.id===cid).name=v;clearTimeout(calcTm);calcTm=setTimeout(()=>save(),800);};
+window.updCUID=async(cid,v)=>{S.children.find(x=>x.id===cid).uid=v;clearTimeout(calcTm);calcTm=setTimeout(()=>save(),800);};
+window.updIN=async(cid,iid,v)=>{S.children.find(x=>x.id===cid).items.find(x=>x.id===iid).name=v;clearTimeout(calcTm);calcTm=setTimeout(()=>save(),800);};
+
+// LOG
+window.delLog=(lid)=>{verifyPin(async()=>{S.logs=S.logs.filter(x=>x.id!==lid);await save();renderLog();});};
+window.clearLogs=()=>{verifyPin(async()=>{if(!confirm('ล้าง log ทั้งหมด?'))return;S.logs=[];await save();renderLog();toast('🗑 ล้าง log แล้วครับ');});};
+
+// CALC
+window.clearCalcQty=()=>{
+  SC.items.forEach(item=>item.qty=0);
+  saveC();renderCalc();toast('🗑 เคลียร์ยอดแล้ว รับลูกค้าคนต่อไปได้เลยครับ!');
+};
+window.addCalcItem=async()=>{SC.items.push({id:'ca'+Date.now(),emoji:'📦',name:'ใหม่',buyRate:0,sellRate:0,qty:0});await saveC();renderCalc();};
+window.delCalcItem=(id)=>{verifyPin(async()=>{SC.items=SC.items.filter(x=>x.id!==id);await saveC();renderCalc();});};
+window.updC=(id,field,val)=>{
+  const item=SC.items.find(x=>x.id===id);if(!item)return;
+  item[field]=(field==='name'||field==='emoji')?val:(parseFloat(val)||0);
+  calcTotal();clearTimeout(calcTm);calcTm=setTimeout(()=>saveC(),800);
+};
+window.copyOrder=async(mode)=>{
+  let grand=0,lines=[mode==='sell'?'📋 สรุปรายการขายครับ':'📋 สรุปรับซื้อครับ'];
+  (SC.items||[]).forEach(item=>{const qty=item.qty||0,rate=mode==='sell'?item.sellRate:item.buyRate;if(qty>0){const sub=qty*rate;grand+=sub;lines.push(item.emoji+' '+item.name+' : '+rate+' x '+fmt(qty)+' = '+fmt(sub));}});
+  if(!grand){toast('⚠️ ยังไม่ได้กรอกจำนวนครับ');return;}
+  lines.push('💰 ยอดรวม : '+fmt(grand));
+  navigator.clipboard.writeText(lines.join('\n')).then(()=>toast('📋 คัดลอก'+(mode==='sell'?'ยอดขาย':'ยอดซื้อ')+'แล้ว!')).catch(()=>toast('❌ ก็อปไม่ได้'));
+};
+window.calcBE=()=>{
+  const sell=parseFloat(document.getElementById('beSellPrice').value)||0;
+  const qty=parseFloat(document.getElementById('beQtySet').value)||150;
+  const profit=parseFloat(document.getElementById('beProfit').value)||30;
+  const market=parseFloat(document.getElementById('beMarket').value)||0;
+  if(!sell||!qty){document.getElementById('beResult').innerHTML='<div style="font-size:12px;color:var(--text3);text-align:center">กรอกข้อมูลเพื่อคำนวณครับ</div>';return;}
+  const costPerPiece=sell/(qty*(1+profit/100));
+  const maxCostPer200=costPerPiece*200;
+  const actualCostPerPiece=market/200;
+  const actualProfit=sell-(actualCostPerPiece*qty);
+  const actualProfitPct=(actualProfit/sell*100);
+  const cutLossPrice=market*0.95;
+  const profitClass=actualProfitPct>=30?'ok':actualProfitPct>=10?'warn':'danger';
+  document.getElementById('beResult').innerHTML=`
+    <div class="be-row"><span class="label">รับได้ไม่เกิน (200 ชิ้น)</span><span class="val ok">${fmt(maxCostPer200)} ฿</span></div>
+    <div class="be-row"><span class="label">ต้นทุน/ชิ้น (ราคาตลาดนี้)</span><span class="val">${fmt(actualCostPerPiece)} ฿</span></div>
+    <div class="be-row"><span class="label">กำไร/เซ็ต (ราคาตลาดนี้)</span><span class="val ${profitClass}">${fmt(actualProfit)} ฿ (${actualProfitPct.toFixed(1)}%)</span></div>
+    <div class="be-row"><span class="label">จุด Cut Loss (−5%)</span><span class="val warn">${fmt(cutLossPrice)} ฿/200 ชิ้น</span></div>
+    <div class="be-row total"><span class="label">สรุป</span><span class="val ${profitClass}">${actualProfitPct>=30?'✅ รับได้':actualProfitPct>=10?'⚠️ กำไรน้อย':'❌ ไม่คุ้ม'}</span></div>`;
+};
+
+window.copySum=()=>{
+  const now=new Date().toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  let txt='⚔️ ครีปถือดาบ — สรุปสต็อก '+now+'\n\n';
+  txt+='⭐ ไอเทมตัวหลัก\n';
+  SM.items.forEach(i=>{txt+=i.emoji+' '+i.name+': '+i.qty+' '+i.unit+'\n';});
+  txt+='\n🟠 โบราณส้ม\n';
+  S.children.forEach(c=>{const s=setsAvail(c);txt+=c.name+': '+s+' เซ็ต | รอบ '+c.rounds+'/10'+(s===0?' ⚠️ หมด':s<=2?' ⚠️ ใกล้หมด':'')+'\n';c.items.forEach(i=>{txt+='  • '+i.name+': '+i.qty+' ชิ้น\n';});});
+  txt+='\n📊 เซ็ตรวม: '+totalSets()+' เซ็ต';
+  navigator.clipboard.writeText(txt).then(()=>toast('📋 คัดลอกแล้ว!')).catch(()=>toast('❌ ก็อปไม่ได้'));
+};
+
+window.showTab=(name,btn)=>{
+  document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');document.getElementById('p-'+name).classList.add('active');
+};
+
+window.toast=(msg)=>{
+  const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTm);toastTm=setTimeout(()=>el.classList.remove('show'),2200);
+};
+
+// SNAP
+window.showSnap=()=>{
+  const el=document.getElementById('snapOverlay');
+  document.getElementById('snapResult').style.display='none';
+  document.getElementById('snapChecks').innerHTML=`
+    <div style="margin-bottom:8px"><label style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:8px"><input type="checkbox" id="snapMain" checked> ⭐ ไอเทมตัวหลัก</label></div>
+    ${S.children.map(c=>`<div style="margin-bottom:6px"><label style="font-size:13px;color:var(--text2);display:flex;align-items:center;gap:8px"><input type="checkbox" class="snap-c" value="${c.id}" checked> ${c.name}</label></div>`).join('')}`;
+  el.classList.add('show');
+};
+window.closeSnap=()=>document.getElementById('snapOverlay').classList.remove('show');
+window.genSnap=()=>{
+  const low=S.settings?.lowAlert||100,crisis=S.settings?.crisisAlert||50;
+  const showMain=document.getElementById('snapMain').checked;
+  const selected=Array.from(document.querySelectorAll('.snap-c:checked')).map(x=>x.value);
+  const creeps=S.children.filter(c=>selected.includes(c.id));
+  const canvas=document.getElementById('snapCanvas');
+  const scale=2;const W=360;
+  let rows=[];
+  if(showMain&&SM.items.length){rows.push({type:'header',text:'⭐ ไอเทมตัวหลัก'});SM.items.forEach(i=>rows.push({type:'main',item:i}));}
+  if(creeps.length){rows.push({type:'header',text:'🟠 โบราณส้ม'});creeps.forEach(c=>{rows.push({type:'child',c});c.items.forEach(i=>rows.push({type:'item',c,i}));rows.push({type:'footer',c});});}
+  const rowH=36,headH=28,padH=16;
+  let totalH=padH;
+  rows.forEach(r=>{if(r.type==='header')totalH+=28;else if(r.type==='child')totalH+=36;else if(r.type==='footer')totalH+=28;else totalH+=rowH;});
+  totalH+=padH+40;
+  canvas.width=W*scale;canvas.height=totalH*scale;
+  canvas.style.height=totalH+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.scale(scale,scale);
+  ctx.fillStyle='#18181f';ctx.fillRect(0,0,W,totalH);
+  let y=padH;
+  ctx.fillStyle='#e8822a';ctx.font='bold 15px Sarabun,sans-serif';ctx.fillText('⚔️ ครีปถือดาบ — สต็อก',16,y+14);
+  const now=new Date().toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  ctx.fillStyle='#5a5a70';ctx.font='11px Sarabun,sans-serif';ctx.fillText(now,16,y+28);
+  y+=44;
+  rows.forEach(r=>{
+    if(r.type==='header'){
+      ctx.fillStyle='#2e2e3a';ctx.fillRect(0,y,W,26);
+      ctx.fillStyle='#9090a8';ctx.font='bold 11px Sarabun,sans-serif';ctx.fillText(r.text,16,y+17);
+      y+=28;
+    } else if(r.type==='child'){
+      const sets=setsAvail(r.c);
+      ctx.fillStyle='#22222c';ctx.fillRect(0,y,W,34);
+      ctx.fillStyle=sets===0?'#e05252':sets<=2?'#d4a843':'#4caf7a';ctx.fillRect(0,y,3,34);
+      ctx.fillStyle='#e8e8f0';ctx.font='bold 13px Sarabun,sans-serif';ctx.fillText(r.c.name,12,y+14);
+      ctx.fillStyle='#5a5a70';ctx.font='10px monospace';ctx.fillText(r.c.uid||'',12,y+27);
+      const badge=sets===0?'ไม่พร้อมขาย/ยกเซ็ต':sets<=2?'ไม่พร้อมขาย/ยกเซ็ต':'พร้อมขาย/ยกเซ็ต';
+      const bc=sets===0?'#e05252':sets<=2?'#d4a843':'#4caf7a';
+      ctx.fillStyle=bc;ctx.font='11px Sarabun,sans-serif';
+      const bw=ctx.measureText(badge).width+16;
+      ctx.fillStyle='#22222c';ctx.strokeStyle=bc;ctx.lineWidth=1;
+      const bx=W-bw-12;
+      ctx.beginPath();ctx.roundRect(bx,y+4,bw,20,10);ctx.fill();ctx.stroke();
+      ctx.fillStyle=bc;ctx.fillText(badge,bx+8,y+17);
+      y+=36;
+    } else if(r.type==='item'){
+      const i=r.i,low=S.settings?.lowAlert||100,crisis=S.settings?.crisisAlert||50;
+      ctx.fillStyle='#18181f';ctx.fillRect(0,y,W,34);
+      ctx.strokeStyle='#2e2e3a';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(12,y+33);ctx.lineTo(W-12,y+33);ctx.stroke();
+      if(i.img){try{const img=new Image();img.src=i.img;ctx.drawImage(img,12,y+3,28,28);}catch(e){}}
+      ctx.fillStyle='#e8e8f0';ctx.font='12px Sarabun,sans-serif';ctx.fillText(i.name,48,y+13);
+      const qColor=i.qty<=crisis?'#e05252':i.qty<=low?'#d4a843':'#e8e8f0';
+      ctx.fillStyle=qColor;ctx.font='bold 14px Sarabun,sans-serif';
+      const qStr=i.qty.toLocaleString('th-TH');ctx.fillText(qStr,W-16-ctx.measureText(qStr).width,y+20);
+      y+=34;
+    } else if(r.type==='footer'){
+      const sets=setsAvail(r.c);
+      const isSingle=r.c.items.length===1;
+      ctx.fillStyle='#22222c';ctx.fillRect(0,y,W,26);
+      ctx.fillStyle='#9090a8';ctx.font='11px Sarabun,sans-serif';
+      if(isSingle){
+        const rounds200=Math.floor(r.c.items[0].qty/200);
+        ctx.fillText('ส่งเต็มรอบได้ '+rounds200+' รอบ | รอบวันนี้ '+r.c.rounds+'/10',16,y+17);
+      } else {
+        ctx.fillText('ส่งได้ '+sets+' เซ็ต | รอบ '+r.c.rounds+'/10',16,y+17);
+      }
+      y+=28;
+    } else if(r.type==='main'){
+      const i=r.item;
+      ctx.fillStyle='#18181f';ctx.fillRect(0,y,W,34);
+      ctx.strokeStyle='#2e2e3a';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(12,y+33);ctx.lineTo(W-12,y+33);ctx.stroke();
+      ctx.fillStyle='#e8e8f0';ctx.font='16px sans-serif';ctx.fillText(i.emoji,12,y+22);
+      ctx.font='12px Sarabun,sans-serif';ctx.fillStyle='#e8e8f0';ctx.fillText(i.name,36,y+14);
+      ctx.fillStyle='#5a5a70';ctx.font='10px Sarabun,sans-serif';ctx.fillText(i.unit||'ชิ้น',36,y+27);
+      ctx.fillStyle='#4caf7a';ctx.font='bold 15px Sarabun,sans-serif';
+      const qStr=i.qty.toLocaleString('th-TH');ctx.fillText(qStr,W-16-ctx.measureText(qStr).width,y+21);
+      y+=34;
+    }
+  });
+  document.getElementById('snapResult').style.display='block';
+  toast('✅ สร้างรูปแล้วครับ กดบันทึกได้เลย');
+};
+window.downloadSnap=()=>{
+  const canvas=document.getElementById('snapCanvas');
+  const a=document.createElement('a');
+  a.download='creep-stock-'+new Date().toLocaleDateString('th-TH')+'.png';
+  a.href=canvas.toDataURL('image/png');a.click();
+  toast('💾 บันทึกรูปแล้วครับ!');
+};
+
+// RENDER
+function renderStrip(){
+  const ok=S.children.filter(c=>setsAvail(c)>=1).length,ts=totalSets(),al=alertCount();
+  const mainTotal=SM.items.reduce((a,i)=>a+i.qty,0);
+  document.getElementById('strip').innerHTML=`
+    <div class="strip-item"><div class="sv ${ok<S.children.length?'warn':'ok'}">${ok}/${S.children.length}</div><div class="sl">พร้อมขาย</div></div>
+    <div class="strip-item"><div class="sv">${ts}</div><div class="sl">เซ็ตรวม</div></div>
+    <div class="strip-item"><div class="sv ok">${mainTotal}</div><div class="sl">ตัวหลักรวม</div></div>
+    <div class="strip-item"><div class="sv ${al?'danger':'ok'}">${al||'✓'}</div><div class="sl">แจ้งเตือน</div></div>`;
+}
+
+function renderMainItems(){
+  const low=S.settings?.lowAlert||100,crisis=S.settings?.crisisAlert||50;
+  const mcRounds=S.mainCreepRounds??10;
+  const mcRC=mcRounds===0?'empty':mcRounds===10?'full':'';
+
+  const mainCreepCard=`<div class="ccard" style="border-left:3px solid var(--purple);margin-bottom:8px">
+    <div class="chead">
+      <div>
+        <div class="ctitle" style="color:var(--purple)">⚔️ ครีปถือดาบ</div>
+        <div class="cuid">
+          <span>69dbef3e796fdab51bc0733b</span>
+          <button class="copy-uid-btn" onclick="copyUID('69dbef3e796fdab51bc0733b')">UID</button>
+        </div>
+      </div>
+      <div class="chead-right">
+        <button class="copy-name-btn" onclick="copyName('ครีปถือดาบ')">ชื่อ</button>
+        <div style="display:flex;align-items:center;gap:3px">
+          <button class="qb" onclick="adjMainCreepRounds(-1)">−</button>
+          <span class="rpill ${mcRC}" style="margin:0">รอบ ${mcRounds}/10</span>
+          <button class="qb" onclick="adjMainCreepRounds(1)">+</button>
+        </div>
+      </div>
+    </div>
+    ${(SM.items||[]).map(item=>{
+      const qc=item.qty<=crisis?'crisis':item.qty<=low?'low':'';
+      const imgH=item.img?`<img src="${item.img}" alt="">`:`<span style="font-size:14px">${item.emoji}</span>`;
+      return `<div class="irow">
+        <div class="iimg">${imgH}</div>
+        <span class="iname">${item.name}<br><span style="font-size:10px;color:var(--text3)">${item.unit||'ชิ้น'}</span></span>
+        <input class="iqty ${qc}" type="number" value="${item.qty}" min="0" inputmode="numeric" onchange="setMainQty('${item.id}',+this.value)" onfocus="this.select()">
+        <input class="sinp" type="number" value="1" min="1" id="msinp-${item.id}" inputmode="numeric" style="width:40px">
+        <button class="sbtn" onclick="sendMainItem('${item.id}')">✈</button>
+      </div>`;
+    }).join('')}
+    <div class="cfoot">
+      <div class="cfoot-col"><div class="cfoot-lbl">ไอเทมตัวหลัก</div><div class="cfoot-val">${SM.items.length} รายการ</div></div>
+      <div class="cfoot-col"><div class="cfoot-lbl">รอบคงเหลือ</div><div class="cfoot-val">${mcRounds}/10</div></div>
+    </div>
+  </div>`;
+
+  document.getElementById('mainItems').innerHTML=mainCreepCard;
+}
+
+window.updMainItemName=async(id,val)=>{
+  const item=SM.items.find(x=>x.id===id);if(!item)return;
+  item.name=val;clearTimeout(calcTm);calcTm=setTimeout(()=>saveM(),800);
+};
+
+window.adjMainCreepRounds=async(d)=>{
+  if(!S.mainCreepRounds&&S.mainCreepRounds!==0)S.mainCreepRounds=10;
+  S.mainCreepRounds=Math.min(10,Math.max(0,S.mainCreepRounds+d));
+  addLog((d>0?'คืน':'หัก')+' 1 รอบ — ครีปถือดาบ (เหลือ '+S.mainCreepRounds+'/10)','round');
+  saving=true;
+  setSync('syncing');
+  S.lastUpdate=new Date().toISOString();
+  await setDoc(DR,S);
+  setSync('ok');upd();
+  renderMainItems();renderStrip();
+  toast((d>0?'คืน':'หัก')+' 1 รอบ ครีปถือดาบ');
+  setTimeout(()=>{saving=false;},2000);
+};
+
+window.sendMainItem=async(id)=>{
+  const item=SM.items.find(x=>x.id===id);if(!item)return;
+  const q=parseInt(document.getElementById('msinp-'+id)?.value)||1;
+  if(item.qty<q){toast('⚠️ ของไม่พอ');return;}
+  item.qty-=q;
+  addLog('✈ ส่ง '+item.name+' '+q+' '+(item.unit||'ชิ้น'),'send');
+  await save();await saveM();renderMainItems();toast('✅ ส่ง '+item.name+' '+q);
+};
+
+function renderCards(){
+  const low=S.settings?.lowAlert||100,crisis=S.settings?.crisisAlert||50;
+  let creeps=[...S.children];
+  if(sortMode==='stock') creeps.sort((a,b)=>setsAvail(a)-setsAvail(b));
+  else if(sortMode==='rounds') creeps.sort((a,b)=>a.rounds-b.rounds);
+  else creeps.sort((a,b)=>(a.order||0)-(b.order||0));
+
+  document.getElementById('creepCards').innerHTML=creeps.map(c=>{
+    const sets=setsAvail(c),sc=sets===0?'s-empty':sets<=2?'s-low':'s-ok',bc=sets===0?'b-empty':sets<=2?'b-low':'b-ok',bt=sets===0?'ไม่พร้อมขาย/ยกเซ็ต':sets<=2?'ไม่พร้อมขาย/ยกเซ็ต':'พร้อมขาย/ยกเซ็ต',rc=c.rounds===0?'empty':c.rounds===10?'full':'';
+    const rows=c.items.map(item=>{
+      const qc=item.qty<=crisis?'crisis':item.qty<=low?'low':'';
+      const imgH=item.img?`<img src="${item.img}" alt=""><input type="file" accept="image/*" onchange="uploadImg('${c.id}','${item.id}',this)">`:`🟫<input type="file" accept="image/*" onchange="uploadImg('${c.id}','${item.id}',this)">`;
+      return `<div class="irow" style="grid-template-columns:30px 1fr auto">
+        <div class="iimg">${imgH}</div>
+        <div style="min-width:0">
+          <span class="iname">${item.name}</span>
+          <div style="display:flex;gap:3px;margin-top:4px;flex-wrap:wrap">
+            ${[50,100,150,200].map(n=>`<button onclick="sendItemQty('${c.id}','${item.id}',${n})" style="background:var(--bg3);border:1px solid var(--border2);border-radius:4px;color:var(--text2);font-family:Sarabun,sans-serif;font-size:11px;padding:2px 7px;cursor:pointer;flex-shrink:0" onmousedown="this.style.background='var(--orange)';this.style.color='#fff'" onmouseup="this.style.background='var(--bg3)';this.style.color='var(--text2)'">${n}</button>`).join('')}
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <input class="iqty ${qc}" type="number" value="${item.qty}" min="0" inputmode="numeric" onchange="setQty('${c.id}','${item.id}',+this.value)" onfocus="this.select()" style="width:70px">
+          <div style="display:flex;gap:3px;align-items:center">
+            <input id="sinp-${c.id}-${item.id}" class="sinp" type="number" placeholder="?" min="1" inputmode="numeric" style="width:44px">
+            <button class="sbtn" onclick="sendItem('${c.id}','${item.id}')" title="ส่ง">✈</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="ccard ${sc}">
+      <div class="chead">
+        <div>
+          <div class="ctitle">${c.name}</div>
+          <div class="cuid">
+            <span style="color:var(--text3)">${c.uid||'ไม่มี UID'}</span>
+            ${c.uid?`<button class="copy-uid-btn" onclick="copyUID('${c.uid}')">UID</button>`:''}
+          </div>
+        </div>
+        <div class="chead-right">
+          <div style="display:flex;gap:4px;align-items:center">
+            <span class="badge ${bc}">${bt}</span>
+            <button class="copy-name-btn" onclick="copyName('${c.name}')">ชื่อ</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:3px">
+            <button class="qb" onclick="adjRounds('${c.id}',-1)">−</button>
+            <span class="rpill ${rc}" style="margin:0">รอบ ${c.rounds}/10</span>
+            <button class="qb" onclick="adjRounds('${c.id}',1)">+</button>
+          </div>
+        </div>
+      </div>
+      ${rows}
+      <div class="cfoot">
+        ${c.items.length===1
+          ? `<div class="cfoot-col"><div class="cfoot-lbl">ส่งเต็มรอบได้</div><div class="cfoot-val">${Math.floor(c.items[0].qty/200)} รอบ</div></div>
+             <div class="cfoot-col"><div class="cfoot-lbl">รอบส่งวันนี้</div><div class="cfoot-val">${c.rounds}/10</div></div>`
+          : `<div class="cfoot-col"><div class="cfoot-lbl">ส่งได้</div><div class="cfoot-val">${sets} เซ็ต</div></div>
+             <div class="cfoot-col"><div class="cfoot-lbl">รอบคงเหลือ</div><div class="cfoot-val">${c.rounds}/10</div></div>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSell(){
+  const low=S.settings?.lowAlert||100;
+  document.getElementById('sellSection').innerHTML=`
+    <div style="font-size:12px;color:var(--text3);margin-bottom:8px">⭐ ตัวหลัก</div>
+    ${(SM.items||[]).map(item=>`
+      <div class="sell-card">
+        <div class="sell-head">
+          <div><span style="font-size:15px">${item.emoji}</span> <span style="font-size:14px;font-weight:600">${item.name}</span></div>
+          <div style="text-align:right">
+            <div class="sell-price">${fmt(item.sellPrice)} ฿/${item.unit}</div>
+            <div style="font-size:11px;color:var(--text3)">${item.qty} ${item.unit} ในสต็อก</div>
+          </div>
+        </div>
+      </div>`).join('')}
+    <div style="font-size:12px;color:var(--text3);margin:10px 0 8px">🟠 โบราณส้ม</div>
+    ${S.children.map(c=>{
+      const sets=setsAvail(c);
+      return `<div class="sell-card">
+        <div class="sell-head">
+          <div>
+            <div style="font-size:14px;font-weight:600">${c.name}</div>
+            <div style="font-size:11px;color:var(--text3)">${sets} เซ็ต | รอบ ${c.rounds}/10</div>
+          </div>
+          <div style="text-align:right">
+            <div class="sell-price">80 ฿/เซ็ต</div>
+            <div style="font-size:11px;color:var(--text3)">${sets===0?'⚠️ หมด':sets<=2?'⚠️ ใกล้หมด':'พร้อมขาย'}</div>
+          </div>
+        </div>
+        ${c.items.map(item=>`
+          <div class="sell-item-row">
+            <div><div class="sell-name">${item.name}</div><div class="sell-stock">${item.qty} ชิ้น${item.qty<low?' ⚠️':''}</div></div>
+            <input id="sinp-sell-${c.id}-${item.id}" class="sinp" type="number" value="50" min="1" inputmode="numeric">
+            <button class="sbtn" onclick="sendItem('${c.id}','${item.id}')">✈</button>
+          </div>`).join('')}
+      </div>`;
+    }).join('')}`;
+}
+
+function renderAlert(){
+  const low=S.settings?.lowAlert||100,crisis=S.settings?.crisisAlert||50;
+  let html='';
+  const emptyC=S.children.filter(c=>setsAvail(c)===0);
+  const lowC=S.children.filter(c=>{const s=setsAvail(c);return s>0&&s<=2;});
+  const crisisItems=S.children.flatMap(c=>c.items.filter(i=>i.qty>0&&i.qty<=crisis).map(i=>({c,i})));
+  const lowItems=S.children.flatMap(c=>c.items.filter(i=>i.qty>crisis&&i.qty<=low).map(i=>({c,i})));
+  const mainLow=SM.items.filter(i=>i.qty<=2);
+  const cutLossItems=SM.items.filter(i=>i.sellPrice>0&&i.sellPrice<i.cutLoss);
+
+  if(cutLossItems.length) html+=`<div class="alert-box danger"><div class="ah">🔴 ราคาต่ำกว่า Cut Loss!</div><div class="ab">${cutLossItems.map(i=>'<b>'+i.emoji+' '+i.name+'</b>: ราคาขาย '+i.sellPrice+' < จุด cut loss '+i.cutLoss).join('<br>')}</div></div>`;
+  if(emptyC.length) html+=`<div class="alert-box danger"><div class="ah">🚨 โบส้มหมดสต็อก — ${emptyC.length} ตัว</div><div class="ab">${emptyC.map(c=>'<b>'+c.name+'</b>: '+c.items.map(i=>i.name+' '+i.qty+'ชิ้น').join(' | ')).join('<br>')}</div></div>`;
+  if(crisisItems.length) html+=`<div class="alert-box danger"><div class="ah">🚨 วิกฤต — ต่ำกว่า ${crisis} ชิ้น</div><div class="ab">${crisisItems.map(x=>'<b>'+x.c.name+'</b> / '+x.i.name+': '+x.i.qty+' ชิ้น').join('<br>')}</div></div>`;
+  if(lowC.length) html+=`<div class="alert-box warn"><div class="ah">⚠️ โบส้มใกล้หมด — ≤2 เซ็ต</div><div class="ab">${lowC.map(c=>'<b>'+c.name+'</b>: '+setsAvail(c)+' เซ็ต').join('<br>')}</div></div>`;
+  if(lowItems.length) html+=`<div class="alert-box warn"><div class="ah">⚠️ ต่ำกว่า ${low} ชิ้น</div><div class="ab">${lowItems.map(x=>'<b>'+x.c.name+'</b> / '+x.i.name+': '+x.i.qty+' ชิ้น').join('<br>')}</div></div>`;
+  if(mainLow.length) html+=`<div class="alert-box warn"><div class="ah">⚠️ ไอเทมตัวหลักใกล้หมด</div><div class="ab">${mainLow.map(i=>i.emoji+' <b>'+i.name+'</b>: '+i.qty+' '+i.unit).join('<br>')}</div></div>`;
+  if(!html) html=`<div class="alert-box ok"><div class="ah">✅ ทุกอย่างปกติครับ</div></div>`;
+  document.getElementById('alertSection').innerHTML=html;
+}
+
+function calcTotal(){
+  let gs=0,gb=0;
+  (SC.items||[]).forEach(item=>{
+    const q=item.qty||0,sell=q*(item.sellRate||0),buy=q*(item.buyRate||0);
+    const el=document.getElementById('cs-'+item.id);
+    if(el){el.textContent=q>0?fmt(sell):'—';el.className='csub'+(q>0?' on':'');}
+    gs+=sell;gb+=buy;
+  });
+  document.getElementById('gtSell').innerHTML=fmt(gs)+' <span style="font-size:12px;color:var(--text2)">฿</span>';
+  document.getElementById('gtBuy').innerHTML=fmt(gb)+' <span style="font-size:12px;color:var(--text2)">฿</span>';
+}
+
+function renderCalc(){
+  document.getElementById('calcItems').innerHTML=(SC.items||[]).map(item=>`
+    <div class="calc-item">
+      <div class="calc-row">
+        <span class="cemoji" onclick="const e=prompt('อีโมจิ:');if(e){updC('${item.id}','emoji',e.trim());this.textContent=e.trim();}">${item.emoji}</span>
+        <input class="cname" value="${item.name}" onchange="updC('${item.id}','name',this.value)">
+        <input class="crate" type="number" value="${item.buyRate}" step="0.01" onchange="updC('${item.id}','buyRate',this.value)">
+        <input class="crate" type="number" value="${item.sellRate}" step="0.01" onchange="updC('${item.id}','sellRate',this.value)">
+        <input class="cqty" type="number" value="${item.qty||''}" placeholder="0" inputmode="numeric" onchange="updC('${item.id}','qty',this.value);calcTotal()">
+        <span class="csub" id="cs-${item.id}">—</span>
+        <button class="del-btn" onclick="delCalcItem('${item.id}')">✕</button>
+      </div>
+    </div>`).join('');
+  calcTotal();
+}
+
+function renderLog(){
+  const el=document.getElementById('logSection');
+  if(!S.logs||!S.logs.length){el.innerHTML='<div class="log-empty">ยังไม่มี log ครับ</div>';return;}
+  const byDay={};S.logs.forEach(l=>{const dk=l.dk||new Date().toDateString();if(!byDay[dk])byDay[dk]=[];byDay[dk].push(l);});
+  const tl={send:'ส่งของ',edit:'แก้ไข',round:'รอบ',buy:'รับของ'};
+  el.innerHTML=Object.entries(byDay).map(([dk,logs])=>{
+    const d=new Date(dk),title=d.toLocaleDateString('th-TH',{weekday:'short',day:'numeric',month:'short'});
+    return `<div class="log-day"><div class="log-day-hd"><span>${title}</span><span style="color:var(--text3)">${logs.length} รายการ</span></div>
+    ${logs.map(l=>`<div class="log-entry"><span class="log-ts">${l.ts}</span><div style="flex:1"><div class="log-msg">${l.msg}</div><span class="log-tag ${l.type||'edit'}">${tl[l.type]||'แก้ไข'}</span></div><button class="log-del" onclick="delLog('${l.id}')">✕</button></div>`).join('')}</div>`;
+  }).join('');
+}
+
+function renderManage(){
+  // ราคาโบส้มต่อเซ็ต
+  const priceCard=`<div class="mc" style="border-color:var(--orange)">
+    <h3 style="color:var(--orange)">💰 ราคาขายโบส้ม/เซ็ต (แก้ด่วน)</h3>
+    ${S.children.map(c=>`
+      <div class="settings-row">
+        <span class="settings-label" style="font-size:12px">${c.name}</span>
+        <div style="display:flex;align-items:center;gap:4px">
+          <input class="settings-inp" type="number" value="${c.sellPrice||80}" onchange="updCSellPrice('${c.id}',+this.value)" style="width:60px">
+          <span style="font-size:11px;color:var(--text3)">฿/เซ็ต</span>
+        </div>
+      </div>`).join('')}
+  </div>
+  <div class="mc" style="border-color:var(--purple)">
+    <h3 style="color:var(--purple)">⭐ จัดการไอเทมตัวหลัก</h3>
+    ${(SM.items||[]).map(item=>`
+      <div class="mrow" style="grid-template-columns:auto 1fr auto">
+        <span style="font-size:20px;cursor:pointer;padding:0 4px" onclick="const e=prompt('อีโมจิใหม่:');if(e){updMainField('${item.id}','emoji',e.trim());renderManage();}" title="กดเพื่อเปลี่ยนอีโมจิ">${item.emoji}</span>
+        <input class="minp" value="${item.name}" onchange="updMainItemName('${item.id}',this.value)">
+        <button class="del-btn" onclick="delMainItem('${item.id}')">🗑</button>
+      </div>`).join('')}
+    <button class="add-c-btn" onclick="addMainItem()">+ เพิ่มไอเทมตัวหลัก</button>
+  </div>`;
+
+  document.getElementById('manageCards').innerHTML=priceCard+S.children.map(c=>`
+    <div class="mc">
+      <h3>
+        <input class="minp" value="${c.name}" style="font-weight:600;font-size:13px" onchange="updCN('${c.id}',this.value)">
+        <button class="del-btn" style="margin-left:6px;flex-shrink:0;width:28px;height:28px" onclick="delChild('${c.id}')">🗑</button>
+      </h3>
+      <div style="margin-bottom:8px">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:3px">UID</div>
+        <input class="minp" value="${c.uid||''}" placeholder="UID ตัวเด็ก" onchange="updCUID('${c.id}',this.value)" style="font-family:monospace;font-size:12px">
+      </div>
+      ${c.items.map(item=>`
+        <div class="mrow">
+          <input class="minp" value="${item.name}" onchange="updIN('${c.id}','${item.id}',this.value)">
+          <span style="font-size:11px;color:var(--text3);white-space:nowrap">${item.qty}ชิ้น</span>
+          <button class="del-btn" onclick="delItem('${c.id}','${item.id}')">✕</button>
+        </div>`).join('')}
+      <button class="add-c-btn" onclick="addItem('${c.id}')">+ เพิ่มไอเทม</button>
+    </div>`).join('');
+}
+
+window.updCSellPrice=async(cid,val)=>{
+  S.children.find(x=>x.id===cid).sellPrice=val;
+  clearTimeout(calcTm);calcTm=setTimeout(()=>save(),600);
+  toast('✅ แก้ราคาขายแล้วครับ');
+};
+
+function renderAll(){renderStrip();renderMainItems();renderCards();renderSell();renderAlert();renderCalc();renderLog();renderManage();upd();}
+loadFB();
+</script>
+</body>
+</html>
