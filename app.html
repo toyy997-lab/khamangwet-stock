@@ -735,26 +735,13 @@ function renderStrip(){
 function renderMainItems(){
   const low=S.settings?.lowAlert||100,crisis=S.settings?.crisisAlert||50;
   const mcRounds=S.mainCreepRounds??10;
-  const mcRC=mcRounds===0?'empty':mcRounds===10?'full':'';
 
-  const mainCreepCard=`<div class="ccard" style="border-left:3px solid var(--purple);margin-bottom:8px">
-    <div class="chead">
-      <div>
-        <div class="ctitle" style="color:var(--purple)">⚔️ ครีปถือดาบ</div>
-        <div class="cuid">
-          <span>69dbef3e796fdab51bc0733b</span>
-          <button class="copy-uid-btn" onclick="copyUID('69dbef3e796fdab51bc0733b')">UID</button>
-        </div>
-      </div>
-      <div class="chead-right">
-        <button class="copy-name-btn" onclick="copyName('ครีปถือดาบ')">ชื่อ</button>
-        <div style="display:flex;align-items:center;gap:3px">
-          <button class="qb" onclick="adjMainCreepRounds(-1)">−</button>
-          <span class="rpill ${mcRC}" style="margin:0">รอบ ${mcRounds}/10</span>
-          <button class="qb" onclick="adjMainCreepRounds(1)">+</button>
-        </div>
-      </div>
+  const itemsHtml=`<div class="main-card">
+    <div class="main-head">
+      <span class="main-title">⭐ ไอเทมตัวหลัก</span>
+      <button class="btn-sm" style="font-size:11px;padding:4px 8px" onclick="addMainItem()">+ เพิ่ม</button>
     </div>
+    ${(SM.items||[]).length===0?'<div style="padding:12px;font-size:13px;color:var(--text3);text-align:center">ยังไม่มีไอเทม กด + เพิ่มได้เลยครับ</div>':''}
     ${(SM.items||[]).map(item=>{
       const qc=item.qty<=crisis?'crisis':item.qty<=low?'low':'';
       const imgH=item.img?`<img src="${item.img}" alt="">`:`<span style="font-size:14px">${item.emoji}</span>`;
@@ -766,13 +753,13 @@ function renderMainItems(){
         <button class="sbtn" onclick="sendMainItem('${item.id}')">✈</button>
       </div>`;
     }).join('')}
-    <div class="cfoot">
+    ${(SM.items||[]).length>0?`<div class="cfoot">
       <div class="cfoot-col"><div class="cfoot-lbl">ไอเทมตัวหลัก</div><div class="cfoot-val">${SM.items.length} รายการ</div></div>
       <div class="cfoot-col"><div class="cfoot-lbl">รอบคงเหลือ</div><div class="cfoot-val">${mcRounds}/10</div></div>
-    </div>
+    </div>`:''}
   </div>`;
 
-  document.getElementById('mainItems').innerHTML=mainCreepCard;
+  document.getElementById('mainItems').innerHTML=itemsHtml;
 }
 
 window.updMainItemName=async(id,val)=>{
