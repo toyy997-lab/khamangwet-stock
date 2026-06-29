@@ -442,11 +442,9 @@ function addLog(msg,type='edit'){
   if(S.logs.length>300)S.logs=S.logs.slice(0,300);
 }
 
-// PIN VERIFY
+// CONFIRM VERIFY
 function verifyPin(cb){
-  const pin=prompt('🔐 ใส่รหัสยืนยันครับ:');
-  if(pin==='971999')cb();
-  else if(pin!==null)toast('❌ รหัสไม่ถูกต้องครับ');
+  if(confirm('ยืนยันการลบครับ?'))cb();
 }
 
 // ACTIONS
